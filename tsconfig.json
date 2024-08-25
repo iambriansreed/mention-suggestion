@@ -1,0 +1,15 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "outDir": "lib",
+        "lib": ["dom", "ES2022"],
+        "rootDir": "./src",
+        "module": "es6",
+        "sourceMap": true,
+        "target": "es6",
+        "strict": true,
+        "removeComments": true,
+        "declaration": true
+    },
+    "include": ["src/**/*"]
+}

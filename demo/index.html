@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Mention Suggestion</title>
+        <style>
+            :root {
+                --background-color: rgb(52, 52, 176);
+            }
+
+            *,
+            *::before,
+            *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
+            }
+
+            h1,
+            h2,
+            h3 {
+                margin-top: 1em;
+                margin-bottom: 1em;
+            }
+            p {
+                margin-bottom: 1rem;
+            }
+
+            body {
+                font-family: Arial, sans-serif;
+                box-sizing: border-box;
+                font: 16px sans-serif;
+            }
+            main {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                min-height: 100vh;
+                padding: 5%;
+                width: min(800px, 100%);
+                margin: 0 auto;
+                padding-bottom: 20rem;
+            }
+
+            [contenteditable],
+            [type='text'] {
+                border: 1px solid #999;
+                padding: 10px;
+                min-height: 3rem;
+                margin-bottom: 1rem;
+                border-radius: 0.25rem;
+            }
+
+            .mention {
+                background-color: var(--background-color);
+                color: white;
+                padding: 0.25rem 0.35rem;
+                border-radius: 0.25rem;
+                margin: 0 0.5rem 0 0;
+                display: inline;
+            }
+
+            ul,
+            ul li {
+                margin: 0 0 0.5rem 1rem;
+            }
+
+            ul li ul {
+                margin-top: 0.5rem;
+            }
+
+            ul[data-suggestions] {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: fit-content;
+                background-color: var(--background-color);
+                color: white;
+                opacity: 1;
+                list-style: none;
+                z-index: 1000;
+                border-radius: 0.25rem;
+                user-select: none;
+            }
+
+            ul[data-suggestions] li {
+                margin: 0;
+                padding: 0.5rem;
+                cursor: pointer;
+            }
+
+            ul[data-suggestions] li:hover,
+            ul[data-suggestions] li.selected {
+                background-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .events {
+                font: 0.8rem monospace;
+                margin-bottom: 1rem;
+                padding: 0.5rem;
+                border: solid 1px #ccc;
+                border-radius: 0.25rem;
+                background: #f1f1f1;
+                overflow: scroll;
+                max-height: 10rem;
+                text-wrap: nowrap;
+            }
+
+            pre code {
+                font-size: 14px;
+            }
+
+            pre {
+                margin-bottom: 1rem;
+            }
+
+            pre:has(code) {
+                padding: 0rem 1rem;
+                background-color: #444;
+                color: white;
+                border-radius: 0.25rem;
+                overflow: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <main>
+            <h1>Mention</h1>
+            <p>
+                A deceptively simple library for adding mention support to contenteditable elements. It is
+                designed to be small, flexible, and easy to use. It has no dependencies and is written in
+                vanilla JavaScript. How the suggestions are displayed is up to you. The library only handles
+                specific events.
+            </p>
+
+            <h2>Syntax</h2>
+
+            <pre><code>
+import createMention from 'mention';
+
+const mention = createMention(prefix, contenteditable);
+
+mention.on('start', (event) => {
+    // show dropdown
+});
+
+mention.on('update', (event) => {
+    // change suggestions in dropdown
+});
+
+mention.on('stop', (event) => {
+    // hide dropdown
+});
+
+function onDropdownItemSelected(item) {
+    mention.set(createMentionElement(item));
+    // trigger the stop the mention event to hide the dropdown after the suggestion is selected
+    mention.stop();
+}
+
+function stopListeningForMentionEvents() {
+    mention.off();
+}
+            </code></pre>
+
+            <h3>Parameters</h3>
+
+            <p><code>prefix</code> (required)</p>
+            <p>
+                The prefix is the character that triggers the mention <code>start</code> event. It is used to
+                identify the beginning of a mention. For example, in Twitter, the prefix is the '@' character.
+            </p>
+
+            <p><code>contenteditable</code> (required)</p>
+            <p>
+                The contenteditable element is the element that the user interacts with to create mentions.
+                The library listens for the <code>input</code> event and selection changes on this element to
+                trigger the mention.
+            </p>
+
+            <h3>Returns</h3>
+
+            <p>The library returns an object with the following methods:</p>
+
+            <ul>
+                <li>
+                    <code>on</code> - event listener with that fires the following events
+                    <ul>
+                        <li><code>start</code> - Triggers when the cursor is in the mention range.</li>
+                        <li>
+                            <code>update</code> - Triggers when the query changes and the cursor is still in
+                            the mention range.
+                        </li>
+                        <li>
+                            <code>stop</code> - Triggers when the cursor is no longer in the range of a
+                            mention.
+                        </li>
+                    </ul>
+                </li>
+                <li><code>off</code> - Removes all event listeners on the content editable.</li>
+                <li><code>set</code> - Replaces the mention text and prefix with an html element.</li>
+                <li>
+                    <code>stop</code> - Manually fire the stop event even if the cursor is in the mention
+                    range.
+                </li>
+            </ul>
+
+            <h2>Usage</h2>
+
+            <section id="example">
+                <p>
+                    This example shows how to use the library with a list of suggestions. The suggestions are
+                    displayed in a fixed position above the contenteditable element. The user can navigate the
+                    list using the up and down arrow keys and select a suggestion by pressing the enter key.
+                </p>
+                <h3>Prefix</h3>
+                <input type="text" name="prefix" placeholder="Prefix" value="@" />
+                <h3>Contenteditable</h3>
+                <div contenteditable></div>
+                <ul data-suggestions tabindex="1"></ul>
+            </section>
+        </main>
+        <script type="module" src="./client.js"></script>
+    </body>
+</html>

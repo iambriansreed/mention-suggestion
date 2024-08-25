@@ -1,0 +1,13 @@
+{
+    "compilerOptions": {
+        "allowJs": true,
+        "lib": ["dom", "ES2022"],
+        "rootDir": "./demo",
+        "module": "es6",
+        "target": "es6",
+        "strict": true,
+        "removeComments": true
+    },
+    "include": ["demo/**/*"],
+    "exclude": ["demo/lib/**/*"]
+}
