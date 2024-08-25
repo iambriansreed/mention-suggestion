@@ -4,8 +4,8 @@
     "description": "A framework agnostic mention and suggestion library for use with contenteditable elements.",
     "main": "lib/index.js",
     "scripts": {
-        "build": "rm -rf ./demo/lib && rm -rf ./lib && tsc --project tsconfig.json && cp -r ./lib ./demo/lib && tsc --project tsconfig.demo.json",
-        "dev": "tsc  --project tsconfig.json --watch & tsc  --project tsconfig.demo.json --watch & http-server -o ./demo"
+        "build": "rm -rf ./docs/lib && rm -rf ./lib && tsc --project tsconfig.json && cp -r ./lib ./docs/lib && tsc --project tsconfig.docs.json",
+        "dev": "tsc  --project tsconfig.json --watch & tsc  --project tsconfig.docs.json --watch & http-server -o ./docs"
     },
     "author": "iambriansreed",
     "keywords": [
